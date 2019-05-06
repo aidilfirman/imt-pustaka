@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0;">
+
+
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel=“stylesheet”>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="shortcut icon" type="image/png" href="static/img/favicon.png" />
+
+  {% if title %}
+  <title>IMT-Pustaka - {{ title }}</title>
+  {% else %}
+  <title>IMT-Pustaka</title>
+  {% endif %}
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <div class="container">
+
+        <a class="navbar-brand mr-4" href="/">IMT Pustaka</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+          aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggle">
+          <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+            <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+          </div>
+
+          <!-- Navbar Right Side -->
+          <div class="navbar-nav">
+            {% if current_user.is_authenticated and current_user.nim == 18100000 %}
+            <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+            <a class="nav-item nav-link" href="{{ url_for('tambah_buku') }}">Add Book</a>
+            <a class="nav-item nav-link" href="{{ url_for('log') }}">Log Book</a>
+            <a class="nav-item nav-link" href="{{ url_for('my_book', name=current_user.username) }}">My Books</a>
+            <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+            {% elif current_user.is_authenticated and current_user.nim != 18100000 %}
+            <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+            <a class="nav-item nav-link" href="{{ url_for('my_book', name=current_user.username) }}">My Books</a>
+            <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+            <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Content Side -->
+  <main role="main" class="container">
+    <div class="row">
+      <div class="col-md-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </div>
+
+      <div class="col-md-4">
+
+        <div class="content-section2">
+          <h2>Indeks Buku</h2>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <a href="{{ url_for('home') }}">Buku Terbaru</a>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <a href="{{ url_for('popular') }}">Buku Terpopuler</a>
+            </div>
+          </div>
+          <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Kategori</a>
+              </div>
+              <div id="collapse1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  <li><a href="{{ url_for('category_book', category='Akademik') }}">Akademik</a></li>
+                  <li><a href="{{ url_for('category_book', category='Hiburan') }}">Hiburan</a></li>
+                  <li><a href="{{ url_for('category_book', category='Ilmu') }}">Ilmu</a></li>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-section2">
+          <h2>Cari Buku</h2>
+          {% from "_formhelpers.html" import render_field %}
+          <form method="POST" class="example">
+            <dl>
+              {{ render_field(form2.kata) }}
+              <p>
+            </dl>
+            <p><input type=submit value=Search>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
+
+
+
+</body>
+
+</html>

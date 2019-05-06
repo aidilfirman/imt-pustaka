@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1 class="mb-3">
+    <font color="white">Total : ({{ logs.total }})</font>
+</h1>
+{% for log in logs.items %}
+<div class="content-section">
+    <small class="text-muted">(Buku dipinjam sejak
+        {{ log.date_start.strftime('%Y-%m-%d %H:%M:%S') }})</small>
+    <h1 class="mr-2">Judul : {{ log.title }}</h1>
+    <a class="btn btn-outline-info" href="{{ url_for('return_book', id=log.title_id) }}">Kembalikan</a>
+</div>
+{% endfor %}
+{% for page_num in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+{% if page_num %}
+{% if logs.page == page_num %}
+<a class="btn btn-info mb-4" href="{{url_for('return_book', id=logs2.title_id, page=page_num) }}">{{ page_num}}</a>
+{% else %}
+<a class="btn btn-outline-info mb-4"
+    href="{{url_for('return_book', id=logs2.title_id, page=page_num) }}">{{ page_num}}</a>
+{% endif %}
+{% else %}
+...
+{% endif %}
+{% endfor %}
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1 class="mb-3">
+    <font color="white">Total : ({{ books.total }})</font>
+</h1>
+{% for book in books.items %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="{{ url_for('category_book', category=book.category) }}">{{ book.category }}</a>
+            <small class="text-muted">jumlah dipinjam {{book.count}} kali</small>
+        </div>
+        <h2><a class="article-title">{{ book.title }}</a></h2>
+        {% if book.availability %}
+        <p class="article-content" href="#">
+            <font color="green">Buku tersedia</font>
+        </p>
+        {% else %}
+        <p class="article-content">
+            <font color="red">Buku tidak tersedia</font>
+        </p>
+        {% endif %}
+    </div>
+</article>
+{% endfor %}
+{% for page_num in books.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+{% if page_num %}
+{% if books.page == page_num %}
+<a class="btn btn-info mb-4"
+    href="{{url_for('category_book', category=books2.category, page=page_num) }}">{{ page_num}}</a>
+{% else %}
+<a class="btn btn-outline-info mb-4"
+    href="{{url_for('category_book', category=books2.category, page=page_num) }}">{{ page_num}}</a>
+{% endif %}
+{% else %}
+...
+{% endif %}
+{% endfor %}
+{% endblock content %}

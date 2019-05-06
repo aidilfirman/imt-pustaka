@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+{% for log in logs.items %}
+<article class="media content-section">
+  <div class="media-body">
+    <h2><a class="article-title">{{ log.title }}</a></h2>
+    <a class="article-content"> Buku dipinjam oleh {{ log.name }}
+    </a>
+    <a class="article-content"><font color="green"> Pada {{ log.date_start.strftime('%Y-%m-%d %H:%M:%S') }}</font>
+    </a>
+    {% if log.date_end == None %}
+    <a class="article-content"><font color="red"> Belum dikembalikan</font>
+    </a>
+    {% else %}
+    <a class="article-content"><font color="red"> Telah dikembalikan pada {{ log.date_end.strftime('%Y-%m-%d %H:%M:%S') }}</font>
+    </a>
+    {% endif %}
+  </div>
+</article>
+{% endfor %}
+{% for page_num in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+{% if page_num %}
+{% if logs.page == page_num %}
+<a class="btn btn-info mb-4" href="{{url_for('log', page=page_num) }}">{{ page_num}}</a>
+{% else %}
+<a class="btn btn-outline-info mb-4" href="{{url_for('log', page=page_num) }}">{{ page_num}}</a>
+{% endif %}
+{% else %}
+...
+{% endif %}
+{% endfor %}
+{% endblock content %}
